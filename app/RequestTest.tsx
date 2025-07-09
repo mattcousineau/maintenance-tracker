@@ -8,8 +8,8 @@ const RequestTest = () => {
   };
 
   return (
-    <Card className="mb-5">
-      <Heading size="4" mb="5">
+    <Card className="mb-5 glass-card">
+      <Heading className="request-heading" size="4" mb="5">
         Message of the Day
       </Heading>
       <p>Reminder that Phil will be out on vacation the week of 7/7 - 7/11.</p>

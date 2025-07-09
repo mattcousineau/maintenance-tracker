@@ -21,7 +21,7 @@ const RequestSummary = ({ open, inProgress, closed }: Props) => {
   return (
     <Flex gap="4">
       {containers.map((container) => (
-        <Card key={container.label}>
+        <Card className="glass-card" key={container.label}>
           <Flex direction="column" gap="1">
             <Link
               className="text-sm font-medium"

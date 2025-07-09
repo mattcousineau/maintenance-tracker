@@ -13,8 +13,8 @@ const LatestRequests = async () => {
   });
 
   return (
-    <Card>
-      <Heading size="4" mb="5">
+    <Card className="glass-card">
+      <Heading className="request-heading" size="4" mb="5">
         Recent Requests
       </Heading>
       <Table.Root>

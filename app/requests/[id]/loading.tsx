@@ -5,7 +5,7 @@ const request = [1, 2, 3, 4, 5];
 const LoadingRequestDetailPage = () => {
   return (
     <Box className="max-w-xl">
-      <Heading>
+      <Heading className="request-heading">
         <Skeleton />
       </Heading>
       <Flex className="space-x-3" my="2">
@@ -14,7 +14,7 @@ const LoadingRequestDetailPage = () => {
           <Skeleton width="8rem" />
         </Text>
       </Flex>
-      <Card className="prose" mt="4">
+      <Card className="prose glass-card" mt="4">
         <Skeleton count={3} />
       </Card>
     </Box>

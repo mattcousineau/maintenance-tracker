@@ -6,12 +6,15 @@ import ReactMarkdown from "react-markdown";
 const RequestDetails = ({ request }: { request: Request }) => {
   return (
     <div>
-      <Heading>{request.title}</Heading>
-      <Flex className="space-x-3" my="2">
+      <Heading className="request-heading">{request.title}</Heading>
+      <Flex className="space-x-3 request-meta" my="2">
         <RequestStatusBadge status={request.status} />
         <Text>{request.createdAt.toDateString()}</Text>
       </Flex>
-      <Card className="prose max-w-full" mt="4">
+      <Card
+        className="prose max-w-full glass-card request-description-card"
+        mt="4"
+      >
         <ReactMarkdown>{request.description}</ReactMarkdown>
       </Card>
     </div>
