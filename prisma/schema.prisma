@@ -20,8 +20,10 @@ model Request {
   status           Status   @default(OPEN)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  createdByUserId  String?  @db.VarChar(255)
   assignedToUserId String?  @db.VarChar(255)
-  assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
+  assignedToUser   User?    @relation("AssignedToUser", fields: [assignedToUserId], references: [id])
+  createdByUser    User?    @relation("CreatedByUser", fields: [createdByUserId], references: [id])
 }
 
 enum Status {
@@ -39,7 +41,8 @@ model User {
   image            String?
   accounts         Account[]
   sessions         Session[]
-  assignedRequests Request[]
+  assignedRequests Request[]       @relation("AssignedToUser")
+  createdRequests  Request[]       @relation("CreatedByUser")
   // Optional for WebAuthn support
   Authenticator    Authenticator[]
 

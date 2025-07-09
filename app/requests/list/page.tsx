@@ -27,6 +27,9 @@ const Requests = async ({ searchParams }: Props) => {
     orderBy,
     skip: (page - 1) * pageSize,
     take: pageSize,
+    include: {
+      createdByUser: true, //eager loading
+    },
   });
 
   const requestCount = await prisma.request.count({ where });

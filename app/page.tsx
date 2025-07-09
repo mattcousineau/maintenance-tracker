@@ -1,9 +1,9 @@
 import prisma from "@/prisma/client";
 import { Flex, Grid } from "@radix-ui/themes";
 import { Metadata } from "next";
+import LatestRequests from "./LatestRequests";
 import RequestChart from "./RequestChart";
 import RequestSummary from "./RequestSummary";
-import LatestRequests from "./LatestRequests";
 import RequestTest from "./RequestTest";
 
 export default async function Home() {

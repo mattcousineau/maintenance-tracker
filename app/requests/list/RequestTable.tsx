@@ -10,9 +10,22 @@ export interface RequestQuery {
   page: string;
 }
 
+interface RequestWithUser extends Request {
+  createdByUser: {
+    name: string | null;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    image: string | null;
+    email: string | null;
+    username: string | null;
+    emailVerified: Date | null;
+  } | null;
+}
+
 interface Props {
   searchParams: RequestQuery;
-  requests: Request[];
+  requests: RequestWithUser[];
 }
 
 const RequestTable = ({ searchParams, requests }: Props) => {
@@ -56,6 +69,9 @@ const RequestTable = ({ searchParams, requests }: Props) => {
             <Table.Cell className="hidden md:table-cell">
               {request.createdAt.toDateString()}
             </Table.Cell>
+            <Table.Cell className="hidden md:table-cell">
+              {request.createdByUser?.name ?? "Unknown"}
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
@@ -67,6 +83,7 @@ const columns: { label: string; value: keyof Request; className?: string }[] = [
   { label: "Request", value: "title" },
   { label: "Status", value: "status", className: "hidden md:table-cell" },
   { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  { label: "Created By", value: "title" },
 ];
 
 export const columnNames = columns.map((column) => column.value);

@@ -6,7 +6,6 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 import { Button, Flex, Text } from "@radix-ui/themes";
-import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {

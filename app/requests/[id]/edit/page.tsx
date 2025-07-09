@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
-import RequestForm from "../../_components/RequestForm";
 import { notFound } from "next/navigation";
+import RequestForm from "../../_components/RequestForm";
 
 interface Props {
   params: { id: string }; //all values in a route are string values by default
