@@ -67,6 +67,7 @@ const NavLinks = () => {
 
   const links = [
     { label: "Dashboard", href: "/" },
+    { label: "Live Chat", href: "/chat" },
     { label: "Requests", href: "/requests/list" },
   ];
 
