@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { Button, TextField } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
@@ -144,18 +144,28 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
           <div>
-            <ScrollArea className="h-150 w-250 rounded-md border">
-              <div className="p-4" ref={chatContainerRef}>
-                <h4 className="mb-4 text-sm leading-none font-medium">
-                  Beginning of Conversation
-                </h4>
-                {Array.from(messages.entries()).map(([key, value]) => (
-                  <React.Fragment key={key}>
-                    <div className="text-sm">{value}</div>
-                  </React.Fragment>
-                ))}
-              </div>
-            </ScrollArea>
+            <ScrollArea.Root>
+              <ScrollArea.Viewport>
+                <div className="p-4" ref={chatContainerRef}>
+                  <h4 className="mb-4 text-sm leading-none font-medium">
+                    Beginning of Conversation
+                  </h4>
+                  {Array.from(messages.entries()).map(([key, value]) => (
+                    <React.Fragment key={key}>
+                      <div className="text-sm">{value}</div>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </ScrollArea.Viewport>
+              <ScrollArea.Scrollbar orientation="horizontal">
+                <ScrollArea.Thumb />
+              </ScrollArea.Scrollbar>
+              <ScrollArea.Scrollbar orientation="vertical">
+                <ScrollArea.Thumb />
+              </ScrollArea.Scrollbar>
+              <ScrollArea.Corner />
+            </ScrollArea.Root>
+
             <div className="flex justify-between mt-3">
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
