@@ -140,72 +140,70 @@ export default function Home() {
   };
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <div>
-            <ScrollArea.Root>
-              <ScrollArea.Viewport>
-                <div className="p-4" ref={chatContainerRef}>
-                  <h4 className="mb-4 text-sm leading-none font-medium">
-                    Beginning of Conversation
-                  </h4>
-                  {Array.from(messages.entries()).map(([key, value]) => (
-                    <React.Fragment key={key}>
-                      <div className="text-sm">{value}</div>
-                    </React.Fragment>
-                  ))}
-                </div>
-              </ScrollArea.Viewport>
-              <ScrollArea.Scrollbar orientation="horizontal">
-                <ScrollArea.Thumb />
-              </ScrollArea.Scrollbar>
-              <ScrollArea.Scrollbar orientation="vertical">
-                <ScrollArea.Thumb />
-              </ScrollArea.Scrollbar>
-              <ScrollArea.Corner />
-            </ScrollArea.Root>
+    <div className="">
+      <main className="">
+        <div>
+          <ScrollArea.Root className="h-[525px] w-[1200px] overflow-hidden rounded bg-white shadow-[0_2px_10px] shadow-blackA4">
+            <ScrollArea.Viewport className="size-full rounded">
+              <div className="p-4" ref={chatContainerRef}>
+                <h4 className="mb-4 text-sm leading-none font-medium">
+                  Beginning of Conversation
+                </h4>
+                {Array.from(messages.entries()).map(([key, value]) => (
+                  <React.Fragment key={key}>
+                    <div className="text-sm">{value}</div>
+                  </React.Fragment>
+                ))}
+              </div>
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar
+              className="flex touch-none select-none bg-blackA3 p-0.5 transition-colors duration-[160ms] ease-out hover:bg-blackA5 data-[orientation=horizontal]:h-2.5 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col"
+              orientation="vertical"
+            >
+              <ScrollArea.Thumb className="relative flex-1 rounded-[10px] bg-mauve10 before:absolute before:left-1/2 before:top-1/2 before:size-full before:min-h-11 before:min-w-11 before:-translate-x-1/2 before:-translate-y-1/2" />
+            </ScrollArea.Scrollbar>
+            <ScrollArea.Corner className="bg-blackA5" />
+          </ScrollArea.Root>
 
-            <div className="flex justify-between mt-3">
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex w-full max-w-sm items-center space-x-2"
-              >
-                <TextField.Root>
-                  <TextField.Input
-                    autoComplete="off"
-                    {...form.register("userMessage")}
-                    type="text"
-                    placeholder="Enter text"
-                  />
-                </TextField.Root>
-                <Button type="submit">Submit</Button>
-                <Popover onOpenChange={setIsOpen} open={isOpen}>
-                  <PopoverTrigger asChild>
-                    <p>😊</p>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-fit p-0">
-                    <EmojiPicker.Root
-                      className="h-[342px]"
-                      onEmojiSelect={({ emoji }) => {
-                        setIsOpen(false);
-                        console.log(emoji);
-                      }}
-                    >
-                      <EmojiPicker.Search />
-                    </EmojiPicker.Root>
-                  </PopoverContent>
-                </Popover>
-              </form>
-              <form onSubmit={handleUpload}>
+          <div className="flex justify-between mt-3">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex w-full max-w-sm items-center space-x-2"
+            >
+              <TextField.Root>
                 <TextField.Input
-                  id="uploadedfile"
-                  type="file"
-                  onChange={handleFileChange}
+                  autoComplete="off"
+                  {...form.register("userMessage")}
+                  type="text"
+                  placeholder="Enter text"
                 />
-                <Button type="submit">Upload</Button>
-              </form>
-            </div>
+              </TextField.Root>
+              <Button type="submit">Submit</Button>
+              <Popover onOpenChange={setIsOpen} open={isOpen}>
+                <PopoverTrigger asChild>
+                  <p>😊</p>
+                </PopoverTrigger>
+                <PopoverContent className="w-fit p-0">
+                  <EmojiPicker.Root
+                    className="h-[342px]"
+                    onEmojiSelect={({ emoji }) => {
+                      setIsOpen(false);
+                      console.log(emoji);
+                    }}
+                  >
+                    <EmojiPicker.Search />
+                  </EmojiPicker.Root>
+                </PopoverContent>
+              </Popover>
+            </form>
+            <form onSubmit={handleUpload}>
+              <TextField.Input
+                id="uploadedfile"
+                type="file"
+                onChange={handleFileChange}
+              />
+              <Button type="submit">Upload</Button>
+            </form>
           </div>
         </div>
       </main>
