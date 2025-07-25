@@ -14,6 +14,22 @@ const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    // Add user ID to the JWT token during sign-in
+    async jwt({ token, user }) {
+      if (user) {
+        // When user signs in, add their ID to the token
+        token.id = user.id; // This is the Prisma-generated cuid()
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
 };
 
 export default authOptions;

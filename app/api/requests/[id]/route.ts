@@ -13,6 +13,7 @@ export async function PATCH(
   if (!session) return NextResponse.json({}, { status: 401 });
 
   const body = await request.json();
+
   const validation = patchRequestSchema.safeParse(body);
 
   if (!validation.success)

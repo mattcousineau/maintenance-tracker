@@ -8,11 +8,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { socket } from "../../socket";
 
+import { ChatMessage } from "@prisma/client";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { EmojiPicker } from "frimousse";
 import React, {
   ChangeEvent,
@@ -21,15 +24,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-
-const formSchema = z.object({
-  userMessage: z
-    .string()
-    .min(1, {
-      message: "Message must be at least 1 character.",
-    })
-    .max(115, { message: "Message must be under 115 characters." }),
-});
+import Skeleton from "../components/Skeleton";
+import { chatMessageSchema } from "../validationschemas";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -40,11 +37,13 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState<any>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      userMessage: "",
-    },
+  const { data: message, error, isLoading } = useChatMessages();
+  const { data: session } = useSession();
+
+  const { handleSubmit, register, reset } = useForm<
+    z.infer<typeof chatMessageSchema>
+  >({
+    resolver: zodResolver(chatMessageSchema),
   });
 
   useEffect(() => {
@@ -90,10 +89,12 @@ export default function Home() {
     socket.emit("clt-msg", `[${date}] [${userName}]: ${value}`);
   }
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    sendMessage(data.userMessage);
-    form.reset();
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    sendMessage(data.chatMsg);
+    await axios.post("/api/messages", data);
+
+    reset();
+  });
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -129,8 +130,6 @@ export default function Home() {
   const handleUpload = (event: { preventDefault: () => void }) => {
     event.preventDefault(); // Prevent default form submission
     if (file) {
-      console.log(">***********", file);
-
       socket.emit("upload", file, (status: string) => {
         console.log(status);
       });
@@ -138,6 +137,9 @@ export default function Home() {
       console.log("No file selected.");
     }
   };
+  if (isLoading) return <Skeleton />;
+
+  if (error) return null;
 
   return (
     <div className="">
@@ -149,9 +151,9 @@ export default function Home() {
                 <h4 className="mb-4 text-sm leading-none font-medium">
                   Beginning of Conversation
                 </h4>
-                {Array.from(messages.entries()).map(([key, value]) => (
-                  <React.Fragment key={key}>
-                    <div className="text-sm">{value}</div>
+                {message?.map((msg) => (
+                  <React.Fragment key={msg.id}>
+                    <div className="text-sm">{msg.message}</div>
                   </React.Fragment>
                 ))}
               </div>
@@ -167,19 +169,19 @@ export default function Home() {
 
           <div className="flex justify-between mt-3">
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={onSubmit}
               className="flex w-full max-w-sm items-center space-x-2"
             >
               <TextField.Root>
                 <TextField.Input
                   autoComplete="off"
-                  {...form.register("userMessage")}
+                  {...register("chatMsg")}
                   type="text"
                   placeholder="Enter text"
                 />
               </TextField.Root>
               <Button type="submit">Submit</Button>
-              <Popover onOpenChange={setIsOpen} open={isOpen}>
+              {/*               <Popover onOpenChange={setIsOpen} open={isOpen}>
                 <PopoverTrigger asChild>
                   <p>😊</p>
                 </PopoverTrigger>
@@ -194,7 +196,7 @@ export default function Home() {
                     <EmojiPicker.Search />
                   </EmojiPicker.Root>
                 </PopoverContent>
-              </Popover>
+              </Popover> */}
             </form>
             <form onSubmit={handleUpload}>
               <TextField.Input
@@ -211,3 +213,11 @@ export default function Home() {
     </div>
   );
 }
+
+const useChatMessages = () =>
+  useQuery<ChatMessage[]>({
+    queryKey: ["chatMessages"],
+    queryFn: () => axios.get("/api/messages").then((res) => res.data),
+    staleTime: 60 * 1000, //60sec
+    retry: 3,
+  });

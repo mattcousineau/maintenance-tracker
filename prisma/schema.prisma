@@ -33,18 +33,31 @@ enum Status {
 }
 
 model User {
-  id               String          @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String?
-  username         String?         @unique
-  email            String?         @unique
+  username         String?   @unique
+  email            String?   @unique
   emailVerified    DateTime?
   image            String?
   accounts         Account[]
   sessions         Session[]
-  assignedRequests Request[]       @relation("AssignedToUser")
-  createdRequests  Request[]       @relation("CreatedByUser")
+  assignedRequests Request[] @relation("AssignedToUser")
+  createdRequests  Request[] @relation("CreatedByUser")
+
   // Optional for WebAuthn support
-  Authenticator    Authenticator[]
+  Authenticator Authenticator[]
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  chatMessages ChatMessage[] @relation("CreatedByUser")
+}
+
+model ChatMessage {
+  id              Int    @id @default(autoincrement())
+  createdByUserId String @db.VarChar(255)
+
+  message       String
+  createdByUser User   @relation("CreatedByUser", fields: [createdByUserId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
